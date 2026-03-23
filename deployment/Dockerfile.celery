@@ -1,0 +1,17 @@
+# Stage 1: Dependencies
+FROM python:3.12-slim AS builder
+RUN pip install poetry==2.0.0
+WORKDIR /app
+COPY backend/pyproject.toml backend/poetry.lock* ./
+RUN poetry config virtualenvs.in-project true && \
+    poetry install --only=main --no-interaction --no-ansi
+
+# Stage 2: Production (Non-Root — BSI-SYS16-ROOT)
+FROM python:3.12-slim
+RUN groupadd -r app && useradd -r -g app -d /app -s /sbin/nologin app
+WORKDIR /app
+COPY --from=builder /app/.venv ./.venv
+COPY backend/src ./src
+ENV PATH="/app/.venv/bin:$PATH"
+USER app
+CMD ["celery", "-A", "src.infrastructure.tasks.celery_app", "worker", "-l", "info"]

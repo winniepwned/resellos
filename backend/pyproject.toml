@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "app-backend"
+version = "0.1.0"
+description = "Full-Stack App Backend — FastAPI, DDD, Compliance-native"
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115"
+uvicorn = {extras = ["standard"], version = "^0.34"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0"}
+asyncpg = "^0.30"
+alembic = "^1.14"
+redis = {extras = ["hiredis"], version = "^5.0"}
+celery = {extras = ["redis"], version = "^5.4"}
+apscheduler = "^3.10"
+httpx = "^0.28"
+pydantic = "^2.10"
+pydantic-settings = "^2.7"
+structlog = "^24.0"
+supabase = "^2.0"
+python-jose = {extras = ["cryptography"], version = "^3.3"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-asyncio = "^0.24"
+pytest-cov = "^6.0"
+ruff = "^0.8"
+mypy = "^1.13"
+factory-boy = "^3.3"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "DTZ", "T20"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
