@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Session } from "@supabase/supabase-js";
+import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 
 interface AuthState {
@@ -16,24 +16,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   session: null,
   loading: true,
 
-  setSession: (session) => set({ session }),
+  setSession: (session) => set({ session, loading: false }),
 
   signIn: async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    set({ session: data.session });
   },
 
   signUp: async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
-    set({ session: data.session });
   },
 
   signOut: async () => {
@@ -42,11 +34,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   initialize: async () => {
-    const { data } = await supabase.auth.getSession();
-    set({ session: data.session, loading: false });
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    set({ session, loading: false });
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      set({ session });
+      set({ session, loading: false });
     });
   },
 }));

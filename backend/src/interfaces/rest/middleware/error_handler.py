@@ -1,8 +1,8 @@
 """Global error handler — never expose stack traces (ISO-827-ERROR)."""
 
+import structlog
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-import structlog
 
 logger = structlog.get_logger()
 

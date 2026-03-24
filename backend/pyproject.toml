@@ -1,9 +1,8 @@
 [tool.poetry]
-name = "app-backend"
-version = "0.1.0"
-description = "Full-Stack App Backend — FastAPI, DDD, Compliance-native"
-readme = "README.md"
-packages = [{include = "src"}]
+name = "resellos-backend"
+version = "1.0.0"
+description = "ResellOS Backend — KI-gestuetztes Warenwirtschaftssystem fuer Reseller"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -21,6 +20,7 @@ pydantic-settings = "^2.7"
 structlog = "^24.0"
 supabase = "^2.0"
 python-jose = {extras = ["cryptography"], version = "^3.3"}
+greenlet = "^3.3.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
@@ -36,6 +36,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "DTZ", "T20"]
+ignore = ["B008"]
 
 [tool.mypy]
 python_version = "3.12"

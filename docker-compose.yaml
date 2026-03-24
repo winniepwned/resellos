@@ -1,7 +1,7 @@
 services:
   redis:
     image: redis:7-alpine
-    container_name: ${COMPOSE_PROJECT_NAME:-app}-redis
+    container_name: ${COMPOSE_PROJECT_NAME:-resellos}-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     ports:

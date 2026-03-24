@@ -18,7 +18,17 @@ logger = structlog.get_logger()
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Application lifespan: startup and shutdown events."""
     await logger.ainfo("Starting application", environment=settings.environment)
+
+    from src.infrastructure.supabase.client import close_http_client
+    from src.infrastructure.tasks.scheduler import scheduler, setup_scheduler
+
+    setup_scheduler()
+    scheduler.start()
+
     yield
+
+    scheduler.shutdown()
+    await close_http_client()
     await logger.ainfo("Shutting down application")
 
 

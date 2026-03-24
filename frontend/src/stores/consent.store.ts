@@ -1,66 +1,67 @@
 import { create } from "zustand";
-import { MMKV } from "react-native-mmkv";
 
-const storage = new MMKV({ id: "consent-storage" });
-
-interface Consents {
+interface ConsentState {
   analytics: boolean;
   marketing: boolean;
   thirdParty: boolean;
-}
-
-interface ConsentState {
-  consents: Consents;
   hasShownBanner: boolean;
-  toggleConsent: (key: keyof Consents) => void;
-  setConsent: (key: keyof Consents, value: boolean) => void;
-  setHasShownBanner: (value: boolean) => void;
+  setConsent: (purpose: "analytics" | "marketing" | "thirdParty", value: boolean) => void;
   revokeAll: () => void;
+  setHasShownBanner: (shown: boolean) => void;
 }
 
-const DEFAULT_CONSENTS: Consents = {
-  analytics: false,
-  marketing: false,
-  thirdParty: false,
+const loadFromStorage = (): Partial<ConsentState> => {
+  try {
+    const data = localStorage.getItem("resellos_consent");
+    return data ? JSON.parse(data) : {};
+  } catch {
+    return {};
+  }
 };
 
-function loadConsents(): Consents {
-  const stored = storage.getString("consents");
-  if (stored) {
-    return JSON.parse(stored) as Consents;
-  }
-  return { ...DEFAULT_CONSENTS };
-}
+const saveToStorage = (state: Partial<ConsentState>) => {
+  localStorage.setItem("resellos_consent", JSON.stringify(state));
+};
 
-function persistConsents(consents: Consents): void {
-  storage.set("consents", JSON.stringify(consents));
-}
+export const useConsentStore = create<ConsentState>((set, get) => {
+  const stored = loadFromStorage();
+  return {
+    analytics: stored.analytics ?? false,
+    marketing: stored.marketing ?? false,
+    thirdParty: stored.thirdParty ?? false,
+    hasShownBanner: stored.hasShownBanner ?? false,
 
-export const useConsentStore = create<ConsentState>((set, get) => ({
-  consents: loadConsents(),
-  hasShownBanner: storage.getBoolean("hasShownBanner") ?? false,
+    setConsent: (purpose, value) => {
+      set({ [purpose]: value });
+      const state = get();
+      saveToStorage({
+        analytics: state.analytics,
+        marketing: state.marketing,
+        thirdParty: state.thirdParty,
+        hasShownBanner: state.hasShownBanner,
+      });
+    },
 
-  toggleConsent: (key) => {
-    const current = get().consents;
-    const updated = { ...current, [key]: !current[key] };
-    persistConsents(updated);
-    set({ consents: updated });
-  },
+    revokeAll: () => {
+      set({ analytics: false, marketing: false, thirdParty: false });
+      const state = get();
+      saveToStorage({
+        analytics: false,
+        marketing: false,
+        thirdParty: false,
+        hasShownBanner: state.hasShownBanner,
+      });
+    },
 
-  setConsent: (key, value) => {
-    const current = get().consents;
-    const updated = { ...current, [key]: value };
-    persistConsents(updated);
-    set({ consents: updated });
-  },
-
-  setHasShownBanner: (value) => {
-    storage.set("hasShownBanner", value);
-    set({ hasShownBanner: value });
-  },
-
-  revokeAll: () => {
-    persistConsents({ ...DEFAULT_CONSENTS });
-    set({ consents: { ...DEFAULT_CONSENTS } });
-  },
-}));
+    setHasShownBanner: (shown) => {
+      set({ hasShownBanner: shown });
+      const state = get();
+      saveToStorage({
+        analytics: state.analytics,
+        marketing: state.marketing,
+        thirdParty: state.thirdParty,
+        hasShownBanner: shown,
+      });
+    },
+  };
+});

@@ -12,7 +12,7 @@ async def require_auth(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ) -> dict:
     """Dependency: require valid Supabase JWT."""
-    payload = verify_supabase_token(credentials.credentials)
+    payload = await verify_supabase_token(credentials.credentials)
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

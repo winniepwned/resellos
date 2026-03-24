@@ -1,12 +1,8 @@
-import { useEffect } from "react";
 import { useAuthStore } from "@/stores/auth.store";
 
 export function useAuth() {
-  const { session, loading, initialize } = useAuthStore();
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
+  const session = useAuthStore((s) => s.session);
+  const loading = useAuthStore((s) => s.loading);
 
   return {
     session,

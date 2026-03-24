@@ -1,24 +1,74 @@
 schema_version: "1.0"
-service_name: "APP-NAME"
+service_name: "ResellOS"
 data_controller: "FIRMENNAME"
 data_protection_officer: "dpo@example.com"
-last_reviewed: "2026-01-01"
-next_review_due: "2026-04-01"
+last_reviewed: "2026-03-23"
+next_review_due: "2026-06-23"
 
-processing_activities: []
-  # Für jeden Service ausfüllen. Beispiel:
-  # - id: "PA-001"
-  #   name: "Benutzerregistrierung"
-  #   purpose: "Account-Erstellung und -Verwaltung"
-  #   legal_basis: "Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung)"
-  #   data_subjects: ["Endbenutzer"]
-  #   data_categories:
-  #     - field: "email"
-  #       classification: "personal"
-  #       purpose: "Login und Kommunikation"
-  #       retention: "Dauer der Nutzung + 30 Tage"
-  #       encrypted_at_rest: true
-  #       pseudonymized: false
+processing_activities:
+  - id: "PA-001"
+    name: "Benutzerregistrierung"
+    purpose: "Account-Erstellung und -Verwaltung"
+    legal_basis: "Art. 6 Abs. 1 lit. b DSGVO (Vertragserfuellung)"
+    data_subjects: ["Endbenutzer"]
+    data_categories:
+      - field: "email"
+        classification: "personal"
+        purpose: "Login und Kommunikation"
+        retention: "Dauer der Nutzung + 30 Tage"
+        encrypted_at_rest: true
+        pseudonymized: false
+      - field: "display_name"
+        classification: "personal"
+        purpose: "Anzeige im Profil"
+        retention: "Dauer der Nutzung + 30 Tage"
+        encrypted_at_rest: true
+        pseudonymized: false
+
+  - id: "PA-002"
+    name: "Inventar-Verwaltung"
+    purpose: "Verwaltung von Reseller-Artikeln"
+    legal_basis: "Art. 6 Abs. 1 lit. b DSGVO (Vertragserfuellung)"
+    data_subjects: ["Endbenutzer"]
+    data_categories:
+      - field: "item_images"
+        classification: "personal"
+        purpose: "Artikelfotos fuer Listing-Vorbereitung"
+        retention: "Dauer der Nutzung + 90 Tage nach Loeschung"
+        encrypted_at_rest: true
+        pseudonymized: false
+      - field: "purchase_price"
+        classification: "financial"
+        purpose: "Profit-Berechnung"
+        retention: "Dauer der Nutzung + 365 Tage (Buchhaltung)"
+        encrypted_at_rest: true
+        pseudonymized: false
+
+  - id: "PA-003"
+    name: "KI-Marktanalyse"
+    purpose: "Preisempfehlungen und Resell-Score-Berechnung"
+    legal_basis: "Art. 6 Abs. 1 lit. b DSGVO (Vertragserfuellung)"
+    data_subjects: ["Endbenutzer"]
+    data_categories:
+      - field: "item_data_to_perplexity"
+        classification: "usage"
+        purpose: "Marktanalyse via Perplexity API"
+        retention: "Nicht persistiert bei Drittanbieter (nur Request/Response)"
+        encrypted_at_rest: false
+        pseudonymized: true
+
+  - id: "PA-004"
+    name: "Einwilligungsverwaltung"
+    purpose: "Verwaltung von Nutzer-Einwilligungen"
+    legal_basis: "Art. 6 Abs. 1 lit. c DSGVO (Rechtliche Verpflichtung)"
+    data_subjects: ["Endbenutzer"]
+    data_categories:
+      - field: "consent_records"
+        classification: "consent"
+        purpose: "Nachweis der Einwilligung"
+        retention: "3 Jahre nach Widerruf"
+        encrypted_at_rest: true
+        pseudonymized: false
 
 data_subject_rights:
   access: "GET /api/v1/me/data"

@@ -1,24 +1,29 @@
-.PHONY: setup dev-backend dev-frontend test lint help
+.PHONY: setup dev dev-backend dev-frontend test lint help
 
 # === Setup ===
 setup:                          ## Erstmaliges Setup
 	cd backend && poetry install
 	cd frontend && npm install
-	docker compose up -d redis
+	docker-compose up -d redis || echo "⚠️  Redis laeuft bereits oder Docker nicht verfuegbar — uebersprungen."
 	cp -n .env.example .env || true
-	cd backend && poetry run alembic upgrade head
-	@echo "✅ Setup fertig."
+	@echo "✅ Setup fertig. Konfiguriere .env und starte mit: make dev"
+
+# === Dev (alles starten) ===
+dev:                            ## Backend + Frontend + Redis starten
+	docker-compose up -d redis || echo "⚠️  Redis laeuft bereits — weiter."
+	@echo "🚀 Starte Backend + Frontend..."
+	$(MAKE) dev-backend & $(MAKE) dev-frontend & wait
 
 # === Backend ===
 dev-backend:                    ## Backend starten (Hot-Reload)
-	cd backend && poetry run uvicorn src.main:app --reload --port 3000
+	cd backend && poetry run uvicorn src.main:app --reload --port 8000
 
 celery:                         ## Celery Worker starten
 	cd backend && poetry run celery -A src.infrastructure.tasks.celery_app worker -l info
 
 # === Frontend ===
-dev-frontend:                   ## Expo Dev-Server starten
-	cd frontend && npx expo start
+dev-frontend:                   ## Vite Dev-Server starten
+	cd frontend && npm run dev
 
 # === Qualität ===
 test:                           ## Alle Tests
@@ -48,10 +53,10 @@ migrate-create:                 ## Neue Migration (msg="beschreibung")
 
 # === Docker ===
 up:                             ## Infra starten
-	docker compose up -d
+	docker-compose up -d
 
 down:                           ## Alles stoppen
-	docker compose down
+	docker-compose down
 
 help:                           ## Hilfe
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
