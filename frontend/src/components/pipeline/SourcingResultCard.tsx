@@ -21,7 +21,7 @@ export function SourcingResultCard({ result }: Props) {
           </div>
         </div>
         {result.estimated_profit_low != null && result.estimated_profit_high != null && (
-          <p className="text-sm text-muted-foreground">Geschaetzter Profit: {result.estimated_profit_low.toFixed(2)} - {result.estimated_profit_high.toFixed(2)} EUR</p>
+          <p className="text-sm text-muted-foreground">Geschaetzter Profit: {Number(result.estimated_profit_low).toFixed(2)} - {Number(result.estimated_profit_high).toFixed(2)} EUR</p>
         )}
         {result.market_reasoning && <p className="text-sm text-muted-foreground">{result.market_reasoning}</p>}
       </CardContent>

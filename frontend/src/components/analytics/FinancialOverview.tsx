@@ -8,10 +8,10 @@ export function FinancialOverview() {
   if (!data) return null;
 
   const metrics = [
-    { label: "Profit", value: `${data.total_profit.toFixed(2)} EUR`, color: "text-green-400" },
-    { label: "Umsatz", value: `${data.total_revenue.toFixed(2)} EUR` },
-    { label: "ROI", value: `${data.roi_percent.toFixed(1)}%`, color: "text-primary" },
-    { label: "Avg. Profit", value: `${data.avg_profit_per_item.toFixed(2)} EUR` },
+    { label: "Profit", value: `${Number(data.total_profit).toFixed(2)} EUR`, color: "text-green-400" },
+    { label: "Umsatz", value: `${Number(data.total_revenue).toFixed(2)} EUR` },
+    { label: "ROI", value: `${Number(data.roi_percent).toFixed(1)}%`, color: "text-primary" },
+    { label: "Avg. Profit", value: `${Number(data.avg_profit_per_item).toFixed(2)} EUR` },
     { label: "Verkauft", value: String(data.items_sold) },
     { label: "Aktiv", value: String(data.items_active) },
   ];

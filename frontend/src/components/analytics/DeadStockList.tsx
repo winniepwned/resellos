@@ -20,12 +20,12 @@ export function DeadStockList() {
                   <span className="text-sm font-medium">{item.title}</span>
                   <span className="text-xs text-destructive">{item.days_stagnating} Tage</span>
                 </div>
-                <p className="text-xs text-muted-foreground">{item.brand} — {item.purchase_price.toFixed(2)} EUR EK</p>
+                <p className="text-xs text-muted-foreground">{item.brand} — {Number(item.purchase_price).toFixed(2)} EUR EK</p>
                 {item.ai_tip && <p className="mt-1 text-xs text-yellow-400">{item.ai_tip}</p>}
               </div>
             ))}
             {data?.total_capital_locked != null && (
-              <p className="text-sm text-muted-foreground">Gebundenes Kapital: {data.total_capital_locked.toFixed(2)} EUR</p>
+              <p className="text-sm text-muted-foreground">Gebundenes Kapital: {Number(data.total_capital_locked).toFixed(2)} EUR</p>
             )}
           </div>
         )}

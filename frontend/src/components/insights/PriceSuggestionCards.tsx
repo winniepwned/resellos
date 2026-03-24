@@ -15,7 +15,7 @@ export function PriceSuggestionCards({ low, optimal, high }: Props) {
         <Card key={c.label}>
           <CardContent className="p-4 text-center">
             <p className="text-xs text-muted-foreground">{c.label}</p>
-            <p className={`mt-1 text-xl font-bold ${c.color}`}>{c.value != null ? `${c.value.toFixed(2)} EUR` : "-"}</p>
+            <p className={`mt-1 text-xl font-bold ${c.color}`}>{c.value != null ? `${Number(c.value).toFixed(2)} EUR` : "-"}</p>
           </CardContent>
         </Card>
       ))}

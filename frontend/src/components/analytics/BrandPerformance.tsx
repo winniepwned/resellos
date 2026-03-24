@@ -16,7 +16,7 @@ export function BrandPerformance() {
             {brands.slice(0, 10).map((b) => (
               <div key={b.brand} className="flex items-center justify-between">
                 <span className="text-sm">{b.brand} ({b.items_count})</span>
-                <span className="text-sm font-medium text-green-400">{b.total_profit.toFixed(2)} EUR</span>
+                <span className="text-sm font-medium text-green-400">{Number(b.total_profit).toFixed(2)} EUR</span>
               </div>
             ))}
           </div>

@@ -17,7 +17,7 @@ export function ItemCard({ item, onClick }: Props) {
           <h3 className="font-medium leading-tight">{item.title}</h3>
           <p className="text-sm text-muted-foreground">{item.brand}</p>
           <div className="flex items-center justify-between pt-1">
-            <span className="text-sm font-semibold">{item.purchase_price_ek.toFixed(2)} EUR</span>
+            <span className="text-sm font-semibold">{Number(item.purchase_price_ek).toFixed(2)} EUR</span>
             <ItemStatusBadge status={item.status} />
           </div>
         </div>

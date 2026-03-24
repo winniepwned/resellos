@@ -24,8 +24,8 @@ export function ItemDetailSlideOver({ item, onClose }: Props) {
           <div className="grid grid-cols-2 gap-3">
             <div><p className="text-xs text-muted-foreground">Marke</p><p className="text-sm font-medium">{item.brand}</p></div>
             <div><p className="text-xs text-muted-foreground">Zustand</p><p className="text-sm font-medium">{item.condition}</p></div>
-            <div><p className="text-xs text-muted-foreground">EK-Preis</p><p className="text-sm font-medium">{item.purchase_price_ek.toFixed(2)} EUR</p></div>
-            <div><p className="text-xs text-muted-foreground">Zielpreis</p><p className="text-sm font-medium">{item.target_price ? `${item.target_price.toFixed(2)} EUR` : "-"}</p></div>
+            <div><p className="text-xs text-muted-foreground">EK-Preis</p><p className="text-sm font-medium">{Number(item.purchase_price_ek).toFixed(2)} EUR</p></div>
+            <div><p className="text-xs text-muted-foreground">Zielpreis</p><p className="text-sm font-medium">{item.target_price ? `${Number(item.target_price).toFixed(2)} EUR` : "-"}</p></div>
             {item.size && <div><p className="text-xs text-muted-foreground">Groesse</p><p className="text-sm font-medium">{item.size}</p></div>}
             {item.color && <div><p className="text-xs text-muted-foreground">Farbe</p><p className="text-sm font-medium">{item.color}</p></div>}
           </div>

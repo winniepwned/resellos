@@ -34,7 +34,7 @@ export function useSellThroughRate() {
   const { isAuthenticated } = useAuth();
   return useQuery({
     queryKey: ["analytics", "sell-through"],
-    queryFn: () => apiClient<{ rate_percent: number }>("/analytics/sell-through"),
+    queryFn: () => apiClient<{ rate_percent: number; items_sold: number; items_listed: number }>("/analytics/sell-through"),
     enabled: isAuthenticated,
   });
 }

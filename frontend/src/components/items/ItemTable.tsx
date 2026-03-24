@@ -24,7 +24,7 @@ export function ItemTable({ items, onSelect }: Props) {
             <tr key={item.id} onClick={() => onSelect(item)} className="border-b cursor-pointer hover:bg-accent/50 transition-colors">
               <td className="px-4 py-3 font-medium">{item.title}</td>
               <td className="px-4 py-3 text-muted-foreground">{item.brand}</td>
-              <td className="px-4 py-3">{item.purchase_price_ek.toFixed(2)} EUR</td>
+              <td className="px-4 py-3">{Number(item.purchase_price_ek).toFixed(2)} EUR</td>
               <td className="px-4 py-3"><ItemStatusBadge status={item.status} /></td>
               <td className="px-4 py-3 text-muted-foreground">{item.platform || "-"}</td>
             </tr>

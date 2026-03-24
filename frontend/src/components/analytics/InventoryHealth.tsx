@@ -13,9 +13,9 @@ export function InventoryHealth() {
       <CardContent>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div><p className="text-xs text-muted-foreground">Artikel</p><p className="text-xl font-bold">{data.total_items}</p></div>
-          <div><p className="text-xs text-muted-foreground">Investiert</p><p className="text-xl font-bold">{data.total_capital_invested.toFixed(2)} EUR</p></div>
-          <div><p className="text-xs text-muted-foreground">Erw. Umsatz</p><p className="text-xl font-bold text-primary">{data.expected_revenue.toFixed(2)} EUR</p></div>
-          <div><p className="text-xs text-muted-foreground">Erw. Profit</p><p className="text-xl font-bold text-green-400">{data.expected_profit.toFixed(2)} EUR</p></div>
+          <div><p className="text-xs text-muted-foreground">Investiert</p><p className="text-xl font-bold">{Number(data.total_capital_invested).toFixed(2)} EUR</p></div>
+          <div><p className="text-xs text-muted-foreground">Erw. Umsatz</p><p className="text-xl font-bold text-primary">{Number(data.expected_revenue).toFixed(2)} EUR</p></div>
+          <div><p className="text-xs text-muted-foreground">Erw. Profit</p><p className="text-xl font-bold text-green-400">{Number(data.expected_profit).toFixed(2)} EUR</p></div>
         </div>
       </CardContent>
     </Card>

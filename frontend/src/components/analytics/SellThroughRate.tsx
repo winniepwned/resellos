@@ -9,7 +9,7 @@ export function SellThroughRate() {
     <Card>
       <CardContent className="p-4">
         <p className="text-xs text-muted-foreground">Sell-Through Rate</p>
-        <p className="mt-1 text-2xl font-bold text-primary">{data.rate_percent.toFixed(1)}%</p>
+        <p className="mt-1 text-2xl font-bold text-primary">{Number(data.rate_percent).toFixed(1)}%</p>
         <p className="text-xs text-muted-foreground">{data.items_sold} von {data.items_listed} gelistet</p>
       </CardContent>
     </Card>
