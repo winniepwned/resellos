@@ -22,6 +22,8 @@ class Item:
     status: str = "draft"
     platform: str | None = None
     notes: str | None = None
+    sku: str | None = None
+    storage_location: str | None = None
     images: list[str] = field(default_factory=list)
     listed_at: datetime | None = None
     sold_at: datetime | None = None

@@ -1,79 +1,109 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { PipelineProgress } from "@/components/pipeline/PipelineProgress";
 import { SourcingResultCard } from "@/components/pipeline/SourcingResultCard";
-import { useStartSourcing, useSourcingStatus, useSourcingResult } from "@/hooks/useSourcing";
+import { useQuickCheck } from "@/hooks/useSourcing";
 import type { SourcingResult } from "@/types";
+import { Search } from "lucide-react";
 
 export function SourcingPage() {
   const [keyword, setKeyword] = useState("");
-  const [taskId, setTaskId] = useState<string | null>(null);
-  const startSourcing = useStartSourcing();
-  const { data: statusData } = useSourcingStatus(taskId);
-  const { data: resultData } = useSourcingResult(
-    statusData?.status === "completed" ? taskId : null
-  );
+  const quickCheck = useQuickCheck();
+  const [result, setResult] = useState<SourcingResult | null>(null);
+  
+  // Pipeline animation state
+  const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (quickCheck.isPending) {
+      setCurrentStep(1);
+      // Simulate pipeline progression visually while backend does the real work
+      interval = setInterval(() => {
+        setCurrentStep((prev) => (prev < 3 ? prev + 1 : prev));
+      }, 1500);
+    } else if (quickCheck.isSuccess) {
+      setCurrentStep(4); // All done
+    } else {
+      setCurrentStep(0);
+    }
+    return () => clearInterval(interval);
+  }, [quickCheck.isPending, quickCheck.isSuccess]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!keyword.trim()) return;
-    const result = await startSourcing.mutateAsync({ keyword });
-    setTaskId(result.task_id);
+    setResult(null);
+    try {
+      const data = await quickCheck.mutateAsync({ keyword });
+      setResult(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getStepStatus = (stepIndex: number): "pending" | "completed" | "running" | "failed" => {
+    if (currentStep === 0) return "pending";
+    if (currentStep > stepIndex) return "completed";
+    if (currentStep === stepIndex) return "running";
+    return "pending";
   };
 
   const pipelineSteps = [
-    { name: "Marke & Kategorie identifizieren", status: getStepStatus(statusData, 1) },
-    { name: "Markt & Konkurrenz scannen", status: getStepStatus(statusData, 2) },
-    { name: "Score & Profitabilitaet berechnen", status: getStepStatus(statusData, 3) },
+    { name: "🔍 Identifiziere Marke & Kategorie...", status: getStepStatus(1) },
+    { name: "🌐 Scanne Web & Konkurrenz (Perplexity AI)...", status: getStepStatus(2) },
+    { name: "⚡ Berechne Resell-Score & Profit...", status: getStepStatus(3) },
   ];
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold">Sourcing</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Schnell-Check: Lohnt sich der Kauf?</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="flex gap-3">
-            <Input
-              placeholder="z.B. Nike Air Max 90 Gr. 42"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="flex-1"
-            />
-            <Button type="submit" disabled={startSourcing.isPending}>
-              {startSourcing.isPending ? "Starte..." : "Analysieren"}
+    <div className="mx-auto max-w-2xl space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Sourcing Pipeline</h1>
+        <p className="text-muted-foreground mt-2">
+          Lohnt sich der Kauf? Lass die KI den aktuellen Markt scannen.
+        </p>
+      </div>
+
+      <Card className="border-2 border-primary/20 shadow-lg bg-card/50 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder="z.B. Nike Jacke XL Vintage"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                className="pl-12 h-14 text-lg bg-background"
+              />
+            </div>
+            <Button type="submit" size="lg" disabled={quickCheck.isPending} className="h-14 px-8 text-lg font-semibold">
+              {quickCheck.isPending ? "Analysiere..." : "Check"}
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      {taskId && (
-        <PipelineProgress
-          steps={pipelineSteps}
-          loading={!statusData}
-        />
+      {(quickCheck.isPending || (quickCheck.isSuccess && result)) && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <PipelineProgress steps={pipelineSteps} />
+        </div>
       )}
 
-      {resultData && <SourcingResultCard result={resultData as SourcingResult} />}
+      {quickCheck.isError && (
+        <Card className="border-destructive bg-destructive/5 mt-6">
+          <CardContent className="p-6 text-destructive flex items-center gap-3">
+            <span className="text-xl">⚠️</span> Es gab einen Fehler bei der Analyse. Bitte versuche es noch einmal.
+          </CardContent>
+        </Card>
+      )}
+
+      {result && currentStep === 4 && (
+        <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 mt-8">
+          <SourcingResultCard result={result} />
+        </div>
+      )}
     </div>
   );
-}
-
-function getStepStatus(
-  data: { status: string; pipeline_steps?: unknown } | undefined,
-  step: number
-): "pending" | "running" | "completed" | "failed" {
-  if (!data) return "pending";
-  if (data.status === "completed") return "completed";
-  if (data.status === "failed") return step <= 1 ? "failed" : "pending";
-  const steps = data.pipeline_steps as Record<string, { status?: string }> | undefined;
-  const key = `step_${step}`;
-  if (steps?.[key]?.status === "completed") return "completed";
-  // Estimate current step based on overall status
-  if (data.status === "analyzing") return step === 1 ? "running" : "pending";
-  return "pending";
 }

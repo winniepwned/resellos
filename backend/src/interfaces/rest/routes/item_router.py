@@ -53,6 +53,8 @@ def _to_response(item: object) -> dict:
         "status": item.status,  # type: ignore[attr-defined]
         "platform": item.platform,  # type: ignore[attr-defined]
         "notes": item.notes,  # type: ignore[attr-defined]
+        "sku": item.sku,  # type: ignore[attr-defined]
+        "storage_location": item.storage_location,  # type: ignore[attr-defined]
         "images": item.images,  # type: ignore[attr-defined]
         "listed_at": item.listed_at,  # type: ignore[attr-defined]
         "sold_at": item.sold_at,  # type: ignore[attr-defined]
@@ -80,6 +82,8 @@ async def create_item(
         color=body.color,
         platform=body.platform,
         notes=body.notes,
+        sku=body.sku,
+        storage_location=body.storage_location,
         images=body.images,
     )
     item = await handler.handle(command)

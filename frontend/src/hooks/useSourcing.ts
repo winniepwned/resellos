@@ -12,6 +12,16 @@ export function useStartSourcing() {
   });
 }
 
+export function useQuickCheck() {
+  return useMutation({
+    mutationFn: (data: { keyword: string; image_url?: string }) =>
+      apiClient<SourcingResult>("/sourcing/quick-check", {
+        method: "POST",
+        body: data,
+      }),
+  });
+}
+
 export function useSourcingStatus(taskId: string | null) {
   return useQuery({
     queryKey: ["sourcing", taskId, "status"],

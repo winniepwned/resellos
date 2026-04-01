@@ -17,6 +17,8 @@ class ItemCreateSchema(BaseModel):
     purchase_price_ek: Decimal = Field(..., ge=0, decimal_places=2)
     platform: str | None = Field(None, max_length=100)
     notes: str | None = None
+    sku: str | None = None
+    storage_location: str | None = None
     images: list[str] = Field(default_factory=list)
 
 
@@ -31,6 +33,8 @@ class ItemUpdateSchema(BaseModel):
     target_price: Decimal | None = Field(None, ge=0)
     platform: str | None = Field(None, max_length=100)
     notes: str | None = None
+    sku: str | None = None
+    storage_location: str | None = None
     images: list[str] | None = None
 
 
@@ -53,12 +57,14 @@ class ItemResponseSchema(BaseModel):
     size: str | None
     condition: str
     color: str | None
-    purchase_price_ek: Decimal
-    target_price: Decimal | None
-    sold_price: Decimal | None
+    purchase_price_ek: float
+    target_price: float | None
+    sold_price: float | None
     status: str
     platform: str | None
     notes: str | None
+    sku: str | None
+    storage_location: str | None
     images: list[str]
     listed_at: datetime | None
     sold_at: datetime | None

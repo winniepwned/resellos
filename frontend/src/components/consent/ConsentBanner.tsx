@@ -38,13 +38,13 @@ export function ConsentBanner() {
         <div className="flex gap-2">
           {/* GDPR-7-REJECT: Reject equally prominent */}
           <Button variant="outline" size="sm" onClick={handleRejectAll}>
-            Ablehnen
+            Nur notwendige
           </Button>
           <Button variant="outline" size="sm" onClick={handleCustomize}>
-            Anpassen
+            Einstellungen
           </Button>
           <Button size="sm" onClick={handleAcceptAll}>
-            Akzeptieren
+            Alle akzeptieren
           </Button>
         </div>
       </div>

@@ -3,7 +3,11 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { App } from "./App";
+import { useThemeStore } from "./stores/theme.store";
 import "./global.css";
+
+// Initialize theme immediately so it applies before React renders
+useThemeStore.getState().initialize();
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -20,6 +20,8 @@ class CreateItemCommand:
         color: str | None = None,
         platform: str | None = None,
         notes: str | None = None,
+        sku: str | None = None,
+        storage_location: str | None = None,
         images: list[str] | None = None,
     ) -> None:
         self.user_id = user_id
@@ -32,6 +34,8 @@ class CreateItemCommand:
         self.color = color
         self.platform = platform
         self.notes = notes
+        self.sku = sku
+        self.storage_location = storage_location
         self.images = images or []
 
 
@@ -51,6 +55,8 @@ class CreateItemHandler:
             color=command.color,
             platform=command.platform,
             notes=command.notes,
+            sku=command.sku,
+            storage_location=command.storage_location,
             images=command.images,
             status="draft",
         )

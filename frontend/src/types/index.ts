@@ -14,6 +14,8 @@ export interface Item {
   platform: string | null;
   notes: string | null;
   images: string[];
+  sku: string | null;
+  storage_location: string | null;
   listed_at: string | null;
   sold_at: string | null;
   created_at: string;

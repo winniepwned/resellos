@@ -28,6 +28,8 @@ class ItemModel(Base):
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="draft", index=True)
     platform: Mapped[str | None] = mapped_column(String(100), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    sku: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    storage_location: Mapped[str | None] = mapped_column(String(255), nullable=True)
     images: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     listed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     sold_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

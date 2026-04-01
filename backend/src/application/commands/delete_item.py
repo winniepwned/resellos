@@ -19,6 +19,5 @@ class DeleteItemHandler:
         item = await self._item_repo.get_by_id(command.item_id)
         if item is None or item.user_id != command.user_id:
             return False
-        item.soft_delete()
-        await self._item_repo.save(item)
+        await self._item_repo.delete(command.item_id)
         return True
